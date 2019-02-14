@@ -13,8 +13,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -28,6 +30,7 @@ public class Client {
     public static BufferedReader plec;
     public  static  PrintStream ps;
     public  static  DataInputStream dis;
+    public static HashMap<String ,Object> newObj = new HashMap<String,Object>();
     
     public Client() throws IOException {
         this.s = new Socket(InetAddress.getByName("127.0.0.1"), 8956);
@@ -53,7 +56,7 @@ public class Client {
 //                true);
     }
         
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
    
         Scanner sc = new Scanner(System.in);
         String name = sc.nextLine();
@@ -70,7 +73,7 @@ public class Client {
         
     }  
       
-    public static void sendData(String[] tabCommand) throws IOException{
+    public static void sendData(String[] tabCommand) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException{
        String typeCmd= tabCommand[1];// what is th e type of the command : to , quit, create , to ...
        //now we must test what is the first argument
        if(typeCmd.equals("quit")){  
@@ -79,9 +82,26 @@ public class Client {
        }else{
            if(typeCmd.equals("create")){
                // we are creating a new object here !!
+               String objName = tabCommand[2];
+               String objPathPackage = tabCommand[3];
+               //instanciate an obj 
+               // i must found a method to create an object from a consturctor
+               Class c = Class.forName(objPathPackage);
+               Object ojbToAdd  = c.newInstance();
+               newObj.put(objName, ojbToAdd);
+               // getConstructor method on c1 
+               // it returns an array of constructors of Boolean class 
+               
+               
+               //see this link: https://www.geeksforgeeks.org/java-lang-class-class-java-set-1/
+               //see in thid link : Constructor<?> getConstructor(Class<?>… parameterTypes) : 
+                Constructor C[] = c.getConstructors(); 
+                       
            }else{
                if(typeCmd.equals("delete")){
                    //we are deleting an existing object !!!!
+                   String objName = tabCommand[2];
+                   newObj.remove(objName);
                }else{
                    if(typeCmd.equals("to")){
                        // in this part we will send anyThink
@@ -106,17 +126,26 @@ public class Client {
                                //that's why we should call to RemoteFileMessage class
                              String file = tabCommand[4]; 
                              RemoteFileMessage rfm = new RemoteFileMessage(file);
+                             rfm.setRecipient(reciver);
                              rfm.openFile();
                            }else{
                                if(functionnality.equals("localefile")){
+                                   //send a localfile
                                    String file = tabCommand[4]; 
                                    LocalFileMessage lfm = new LocalFileMessage(file);
                                    String fileName = lfm.getFileName(file);
+                                   lfm.setRecipient(reciver);
                                    lfm.openFile(fileName);
                                 }else{
                                     if(functionnality.equals("object")){
+                                        //sned an object that we found him in the hashmap
+                                        //opm.format method send the object it self
+                                        //that's mean she send an ObjectPropertiesMessage object
                                         String objName = tabCommand[4];  
-                                     }
+                                        Object objToSend = newObj.get(objName);
+                                        ObjectPropertiesMessage opm = new ObjectPropertiesMessage(objToSend);
+                                        opm.format(ps);
+                                    }
                                 }
                            }
                        }

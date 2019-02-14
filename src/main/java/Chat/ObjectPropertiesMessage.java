@@ -12,10 +12,18 @@ import java.io.PrintStream;
  * @author houssem
  */
 public class ObjectPropertiesMessage extends AbstractMessage{
+    
+    private Object obj;
 
+    public ObjectPropertiesMessage(Object objToSend) {
+        this.obj =obj;    
+    }
+    
     @Override
     public void format(PrintStream out) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //to complete , we must send an object
+        out.println(this);
+    
     }
     
 }
