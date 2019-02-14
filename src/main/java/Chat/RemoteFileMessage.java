@@ -27,8 +27,8 @@ public class RemoteFileMessage extends  AbstractMessage{
         //A verifier
     }
     
-    public void openFile(String url) throws IOException{
-        Runtime.getRuntime().exec("xdg-open '"+url+"'");
+    public void openFile() throws IOException{
+        Runtime.getRuntime().exec("xdg-open '"+urlFile+"'");
     }
     
 }

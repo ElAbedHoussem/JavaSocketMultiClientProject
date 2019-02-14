@@ -5,8 +5,6 @@
  */
 package Chat;
 
-import java.io.PrintStream;
-
 /**
  *
  * @author houssem
@@ -19,5 +17,10 @@ public abstract class AbstractMessage implements  Message{
     public String getRecipient() {
         return recipient;
     }
+    //I add this method because I will send just an Message object , and he must contains the recipient name 
+    public  void setRecipient(String recipient){
+        this.recipient = recipient;
+    }
+    
     
 }
