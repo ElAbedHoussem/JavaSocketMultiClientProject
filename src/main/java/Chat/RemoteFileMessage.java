@@ -7,16 +7,14 @@ package Chat;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.Serializable;
 
 /**
  *
  * @author houssem
  */
-public class RemoteFileMessage extends  AbstractMessage{
-
-    private String urlFile;
+public class RemoteFileMessage extends AbstractMessage implements Serializable{
+     private String urlFile;
 
     public RemoteFileMessage(String urlFile) {
         this.urlFile = urlFile;
@@ -30,5 +28,4 @@ public class RemoteFileMessage extends  AbstractMessage{
     public void openFile() throws IOException{
         Runtime.getRuntime().exec("xdg-open '"+urlFile+"'");
     }
-    
 }

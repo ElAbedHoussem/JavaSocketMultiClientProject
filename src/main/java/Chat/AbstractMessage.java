@@ -9,7 +9,7 @@ package Chat;
  *
  * @author houssem
  */
-public abstract class AbstractMessage implements  Message{
+public abstract class AbstractMessage implements  Message {
     
     
     private String recipient;

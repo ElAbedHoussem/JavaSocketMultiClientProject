@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author houssem
  */
-public class LocalFileMessage extends  AbstractMessage{
+public class LocalFileMessage extends  AbstractMessage implements Serializable{
 
     private String fileName;
     private byte[] fileContent;

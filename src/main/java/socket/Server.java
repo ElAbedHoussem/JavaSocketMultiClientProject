@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import static java.lang.System.in;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -27,23 +28,22 @@ import java.util.logging.Logger;
  */
 public class Server {
 
+    static ServerSocket ss;
+    static Socket s ;
+    public static HashMap<String ,Object> newObj = new HashMap<String,Object>();
+  
     public static void main(String[] args) {
-        //TCP!!
+            //TCP!!
         try {
-            ExecutorService pool = Executors.newFixedThreadPool(2);
-            ServerSocket ss = new ServerSocket(8956);
-
+            ExecutorService pool = Executors.newFixedThreadPool(64);
+            ss = new ServerSocket(8956);
             while (true) {    //wait untill a client coànnects
                 Socket s = ss.accept();
+                final DataOutputStream out = new DataOutputStream(s.getOutputStream());
                 final BufferedReader bufferR = new BufferedReader(
                         new InputStreamReader(s.getInputStream())
                 );
-
-                final PrintWriter bufferW = new PrintWriter(
-                        new BufferedWriter(
-                                new OutputStreamWriter(s.getOutputStream())),
-                        true);
-
+               
                 pool.submit(new Runnable() {
 
                     @Override
@@ -54,16 +54,12 @@ public class Server {
 //                            DataInputStream in = new DataInputStream(s.getInputStream());
 //                            //ecrire au client
 //                            DataOutputStream out = new DataOutputStream(s.getOutputStream());
-
                             System.out.println("i am in the server");
-                            String clientName = bufferR.readLine();
-                            bufferW.println("You are welcome " + clientName);
-
-                            String command = bufferR.readLine();
+                            String userName = bufferR.readLine();
+                            System.out.println("userName=" + userName);
+                            Object command = bufferR.readLine();
                             System.out.println("command=" + command);
-                            //bufferW.println("command = " + command);
-     
-     
+                            //out.writeBytes("hello "+userName+" you have just tapped "+command);
                             
                             
                         } catch (IOException ex) {
@@ -72,7 +68,8 @@ public class Server {
                     }
                 });
             }
-        } catch (Exception ex) {
+        } catch (IOException ex) {
+            System.err.println(ex);
 
         }
     }

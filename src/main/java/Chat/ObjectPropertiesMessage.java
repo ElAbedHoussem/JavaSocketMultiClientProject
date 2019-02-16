@@ -6,12 +6,13 @@
 package Chat;
 
 import java.io.PrintStream;
+import java.io.Serializable;
 
 /**
  *
  * @author houssem
  */
-public class ObjectPropertiesMessage extends AbstractMessage{
+public class ObjectPropertiesMessage extends AbstractMessage implements Serializable{
     
     private Object obj;
 
